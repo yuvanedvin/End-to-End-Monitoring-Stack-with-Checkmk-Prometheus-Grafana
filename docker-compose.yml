@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  checkmk:
+    image: checkmk/check-mk-raw:latest
+    container_name: checkmk
+    ports:
+      - "8080:5000"
+    volumes:
+      - checkmk_data:/omd/sites
+    environment:
+      - CMK_SITE_ID=mysite
+      - CMK_PASSWORD=cmkadmin
+    restart: always
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - checkmk
+    restart: always
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: always
+
+volumes:
+  checkmk_data:
+  grafana_data:

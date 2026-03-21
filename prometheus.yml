@@ -1,0 +1,8 @@
+scrape_configs:
+  - job_name: 'checkmk'
+    metrics_path: /mysite/prometheus
+    static_configs:
+      - targets: ['checkmk:5000']
+    basic_auth:
+      username: prometheus
+      password: ZW(pA@4Xc408Ec(p
